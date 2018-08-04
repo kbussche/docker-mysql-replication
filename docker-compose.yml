@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+
+  master:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      LOG_BIN: 1
+      LOG_FORMAT: mixed
+      SERVER_ID: 1
+    volumes:
+       - ./master:/var/lib/mysql
+       - ./master/cnf:/etc/mysql/conf.d
+  slave:
+    image: mysql
+    restart: always
+    ports:
+        - "3310:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      LOG_BIN: 1
+      SERVER_ID: 2
+    volumes:
+       - ./slave:/var/lib/mysql
+       - ./slave/cnf:/etc/mysql/conf.d
+    links:
+       - master:master
